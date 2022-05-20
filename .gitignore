@@ -1,0 +1,22 @@
+#System files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+/.settings
+/.project
+/.buildpath
+/.idea
+
+# Config files
+config/*
+!config/example
+
+# log
+log/*
+
+#Runtime
+app/*/Runtime
+*/*/File
+/runtime
+/vendor
