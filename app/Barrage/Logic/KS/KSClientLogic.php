@@ -42,7 +42,7 @@ class KSClientLogic
     }
 
     /**
-     * @param $stream
+     * @return Closure
      */
     public function getLiveStreamHandler()
     {
@@ -50,7 +50,10 @@ class KSClientLogic
             try {
                 $socketMessage = new SocketMessage();
                 $socketMessage->mergeFromString($stream);
-                echo '----------------------------------------推流分析:' . KSMap::getPayLoadTypeName($socketMessage->getPayloadType()) . '_' . $socketMessage->getCompressionType() . PHP_EOL;
+                echo '----------------------------------------推流分析:' .
+                    KSMap::getPayLoadTypeName($socketMessage->getPayloadType()) .
+                    '_' . $socketMessage->getCompressionType().
+                    $socketMessage->getCompressionType() . PHP_EOL;
                 if (in_array($socketMessage->getPayloadType(), [310])) {
                     $csWebEnterRoom = new SCWebFeedPush();
                     $csWebEnterRoom->mergeFromString($socketMessage->getPayload());
@@ -94,7 +97,7 @@ class KSClientLogic
                         $csWebEnterRoom->getSystemNoticeFeeds()->count() +
                         $csWebEnterRoom->getShareFeeds()->count() <= 0
                     ) {
-                        echo '空信息:' . $socketMessage->getCompressionType() . PHP_EOL;
+                        echo '空信息:' . $csWebEnterRoom->getPushInterval() . PHP_EOL;
                     }
                 }
             } catch (Throwable $e) {

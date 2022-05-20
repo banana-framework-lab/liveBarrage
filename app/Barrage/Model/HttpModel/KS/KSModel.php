@@ -8,7 +8,8 @@ use Library\Abstracts\Model\AbstractHttpModel;
 
 class KSModel extends AbstractHttpModel
 {
-    const GET_LIVE_URL = 'https://livev.m.chenzhongtech.com/fw/live/';
+    const GET_LIVE_URL = 'https://m.gifshow.com/fw/live/';
+//    const GET_LIVE_URL = 'https://livev.m.chenzhongtech.com/fw/live/';
 
     /**
      * @param $url
