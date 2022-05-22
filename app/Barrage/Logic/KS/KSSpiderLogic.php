@@ -23,24 +23,36 @@ class KSSpiderLogic
      */
     public function getLiveSpider($live_id)
     {
-        $liveInfo = (new KSModel())->getLiveInfo(
+        $liveInfo = (new KSModel())->getStreamId(
             $live_id,
-            'did=web_e2c386c5989849e2b5d35f8eeb5ba6d7; didv=1652943906000; sid=ed16c913549f9f0722c49756; Hm_lvt_86a27b7db2c5c0ae37fee4a8a35033ee=1652943904; Hm_lpvt_86a27b7db2c5c0ae37fee4a8a35033ee=1652948380'
+            'did=web_d6e9b22e6c8d7b4d0574e37ba556e573'
         );
-        preg_match_all("/wsFeedInfo\":(.*),\"liveExist/", $liveInfo, $result);
-        if ($result) {
-            $wsFeedInfo = json_decode($result[1][0], true);
-            $data['stream_id'] = $wsFeedInfo['liveStreamId'] ?? '';
-            $data['live_ws_url'] = $wsFeedInfo['webSocketUrls'][0] ?? '';
-            $data['token'] = $wsFeedInfo['token'] ?? '';
+        preg_match_all("/liveStream\":(.*),\"feedInfo/", $liveInfo, $result);
+        if ($result[1][0] ?? false) {
+            $streamInfo = json_decode($result[1][0], true);
+            if ($streamInfo['json'] ?? false) {
+                $data['stream_id'] = $streamInfo['json']['liveStreamId'] ?? '';
 
-            $spider = new KSSpiderObject($data);
-            $spider->live_id = $live_id;
-            $spider->page_id = $this->getPageId();
-            $spider->reg_data = $this->getLiveRegData($spider);
-            return $spider;
+                $socketInfo = (new KSModel())->getWebSocketInfo(
+                    $live_id,
+                    $data['stream_id'],
+                    'userId=622817178; clientid=3; kuaishou.live.bfb1s=7206d814e5c089a58c910ed8bf52ace5; did=web_d6e9b22e6c8d7b4d0574e37ba556e573; client_key=65890b29; kpn=GAME_ZONE; ksliveShowClipTip=true; userId=622817178; kuaishou.live.web_st=ChRrdWFpc2hvdS5saXZlLndlYi5zdBKgAV06y9Q4f5bzqqBtnOGVjIxJ4hj73hwjMQWh_7y5-Hi6MFocE6BccAJAUQCGB-0fsr7ssX3r3YwbqK4LucVlXt9PrCX74GUU8yAMBqMKw6rMKIEVA0UWQFazPHo8iUIDJsPZhf-Dyx8KoWY_xYJe6gdsZTeTVtWG3GGy9VqP0mqhMk8xkatd2ENBXxwHDSAZd-lN8_4vm1yRnpbK5sLm-RIaEk2hY_LIikBot7IUVtJ3ydB6KCIgPiLcSEaVDLJoEHr-tLE3PXCJHfoI4pj8zFv90NJ7QG8oBTAB; kuaishou.live.web_ph=da7298fbe0d373853d80cb9ec3bfb2c9bc05'
+                );
+
+                $socketInfo = json_decode($socketInfo, true);
+                $spider = new KSSpiderObject($data);
+                $spider->token = $socketInfo['data']['webSocketInfo']['token'];
+                $spider->live_ws_url = $socketInfo['data']['webSocketInfo']['webSocketUrls'][0] ?? '';
+                $spider->live_id = $live_id;
+                $spider->page_id = $this->getPageId();
+                $spider->reg_data = $this->getLiveRegData($spider);
+                return $spider;
+            } else {
+                throw new Exception('直播间还未开播');
+            }
         } else {
             throw new Exception('直播间信息获取失败');
+            echo var_dump($liveInfo);
         }
     }
 

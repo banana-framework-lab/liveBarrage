@@ -5,6 +5,7 @@ namespace App\Barrage\Logic\KS;
 use App\Barrage\Constant\KSMap;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
+use Google\Protobuf\Internal\CodedInputStream;
 use KuaiShouPack\SCWebFeedPush;
 use KuaiShouPack\SocketMessage;
 use KuaiShouPack\WebComboCommentFeed;
@@ -52,8 +53,7 @@ class KSClientLogic
                 $socketMessage->mergeFromString($stream);
                 echo '----------------------------------------推流分析:' .
                     KSMap::getPayLoadTypeName($socketMessage->getPayloadType()) .
-                    '_' . $socketMessage->getCompressionType().
-                    $socketMessage->getCompressionType() . PHP_EOL;
+                    '_' . $socketMessage->getCompressionType() . PHP_EOL;
                 if (in_array($socketMessage->getPayloadType(), [310])) {
                     $csWebEnterRoom = new SCWebFeedPush();
                     $csWebEnterRoom->mergeFromString($socketMessage->getPayload());
@@ -97,7 +97,8 @@ class KSClientLogic
                         $csWebEnterRoom->getSystemNoticeFeeds()->count() +
                         $csWebEnterRoom->getShareFeeds()->count() <= 0
                     ) {
-                        echo '空信息:' . $csWebEnterRoom->getPushInterval() . PHP_EOL;
+                        echo '空信息:'  . PHP_EOL;
+                        var_dump(new CodedInputStream($stream));
                     }
                 }
             } catch (Throwable $e) {
