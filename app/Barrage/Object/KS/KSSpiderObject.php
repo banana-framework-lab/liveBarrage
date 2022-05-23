@@ -17,6 +17,6 @@ class KSSpiderObject extends AbstractObject
 
     public $page_id;
 
-    public $reg_data;
+    public $reg_decode_data;
 
 }

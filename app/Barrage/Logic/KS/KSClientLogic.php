@@ -6,6 +6,8 @@ use App\Barrage\Constant\KSMap;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
 use Google\Protobuf\Internal\CodedInputStream;
+use KuaiShouPack\CSWebEnterRoom;
+use KuaiShouPack\CSWebHeartbeat;
 use KuaiShouPack\SCWebFeedPush;
 use KuaiShouPack\SocketMessage;
 use KuaiShouPack\WebComboCommentFeed;
@@ -25,8 +27,18 @@ class KSClientLogic
     public function getOnConnectHandler()
     {
         return function (Client $client, KSSpiderObject $spider) {
-            echo '----------------------------------------开始抓取' . PHP_EOL;
-            $client->push($spider->reg_data, WEBSOCKET_OPCODE_BINARY);
+            echo '----------------------------------------开始抓取'.$client->getStatusCode() . PHP_EOL;
+
+            $socketMessage = new SocketMessage();
+            $csWebEnterRoom = new CSWebEnterRoom();
+            $csWebEnterRoom->setLiveStreamId($spider->stream_id);
+            $csWebEnterRoom->setPageId($spider->page_id);
+            $csWebEnterRoom->setToken($spider->token);
+            $spider->reg_decode_data = $csWebEnterRoom->serializeToJsonString();
+            $socketMessage->setPayload($csWebEnterRoom->serializeToString());
+            $socketMessage->setPayloadType(200);
+
+            $client->push($csWebEnterRoom->serializeToString(), WEBSOCKET_OPCODE_BINARY);
         };
     }
 
@@ -38,7 +50,14 @@ class KSClientLogic
         return function (Client $client, KSSpiderObject $spider) {
             echo '----------------------------------------发送心跳包' . PHP_EOL;
 
-            $client->push((new KSSpiderLogic())->getLiveHeartBeatData($spider), WEBSOCKET_OPCODE_BINARY);
+            $socketMessage = new SocketMessage();
+            $csWebHeartBeat = new CSWebHeartbeat();
+            $csWebHeartBeat->setTimestamp((int)(time() * 1000));
+            $socketMessage->setPayload($csWebHeartBeat->serializeToString());
+            $socketMessage->setPayloadType(1);
+            $socketMessage->serializeToString();
+
+            $client->push($socketMessage->serializeToString(), WEBSOCKET_OPCODE_BINARY);
         };
     }
 
@@ -54,6 +73,7 @@ class KSClientLogic
                 echo '----------------------------------------推流分析:' .
                     KSMap::getPayLoadTypeName($socketMessage->getPayloadType()) .
                     '_' . $socketMessage->getCompressionType() . PHP_EOL;
+
                 if (in_array($socketMessage->getPayloadType(), [310])) {
                     $csWebEnterRoom = new SCWebFeedPush();
                     $csWebEnterRoom->mergeFromString($socketMessage->getPayload());
