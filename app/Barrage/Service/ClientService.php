@@ -40,10 +40,10 @@ class ClientService
         });
     }
 
-    private function liveStreamHandle($stream)
+    private function liveStreamHandle($stream, Client $client, KSSpiderObject $spider)
     {
         $function = $this->liveStreamFunction;
-        return $function($stream) ?: true;
+        return $function($stream, $client, $spider) ?: true;
     }
 
     /**
@@ -114,10 +114,9 @@ class ClientService
 
         if ($this->client->getStatusCode() !== 101) {
             echo "websocket握手失败,返回码为" . $this->client->getStatusCode() . PHP_EOL;
+            $this->client->close();
             return;
         }
-
-        $this->client->close();
 
         $this->startOnConnect();
         $this->startHeartBeat();
@@ -125,11 +124,11 @@ class ClientService
         while (true) {
             $swooleMsg = $this->client->recv();
             if ($swooleMsg) {
-                if (!$this->liveStreamHandle($swooleMsg->data)) {
+                if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
                     break;
                 }
             }
-            co::sleep(10);
+            co::sleep(5);
         }
 
         Timer::clear($this->heartBeatPid);

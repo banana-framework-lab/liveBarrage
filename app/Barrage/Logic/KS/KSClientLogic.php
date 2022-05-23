@@ -3,11 +3,13 @@
 namespace App\Barrage\Logic\KS;
 
 use App\Barrage\Constant\KSMap;
+use App\Barrage\Model\HttpModel\KS\KSModel;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
 use Google\Protobuf\Internal\CodedInputStream;
 use KuaiShouPack\CSWebEnterRoom;
 use KuaiShouPack\CSWebHeartbeat;
+use KuaiShouPack\SCWebEnterRoomAck;
 use KuaiShouPack\SCWebFeedPush;
 use KuaiShouPack\SocketMessage;
 use KuaiShouPack\WebComboCommentFeed;
@@ -16,7 +18,9 @@ use KuaiShouPack\WebGiftFeed;
 use KuaiShouPack\WebLikeFeed;
 use KuaiShouPack\WebShareFeed;
 use KuaiShouPack\WebSystemNoticeFeed;
+use Library\Container;
 use Swoole\Coroutine\Http\Client;
+use Swoole\Timer;
 use Throwable;
 
 class KSClientLogic
@@ -27,7 +31,7 @@ class KSClientLogic
     public function getOnConnectHandler()
     {
         return function (Client $client, KSSpiderObject $spider) {
-            echo '----------------------------------------开始抓取'.$client->getStatusCode() . PHP_EOL;
+            echo '----------------------------------------开始抓取' . PHP_EOL;
 
             $socketMessage = new SocketMessage();
             $csWebEnterRoom = new CSWebEnterRoom();
@@ -38,7 +42,7 @@ class KSClientLogic
             $socketMessage->setPayload($csWebEnterRoom->serializeToString());
             $socketMessage->setPayloadType(200);
 
-            $client->push($csWebEnterRoom->serializeToString(), WEBSOCKET_OPCODE_BINARY);
+            $client->push($socketMessage->serializeToString(), WEBSOCKET_OPCODE_BINARY);
         };
     }
 
@@ -66,7 +70,7 @@ class KSClientLogic
      */
     public function getLiveStreamHandler()
     {
-        return function ($stream) {
+        return function ($stream, Client $client, KSSpiderObject $spider) {
             try {
                 $socketMessage = new SocketMessage();
                 $socketMessage->mergeFromString($stream);
@@ -74,7 +78,27 @@ class KSClientLogic
                     KSMap::getPayLoadTypeName($socketMessage->getPayloadType()) .
                     '_' . $socketMessage->getCompressionType() . PHP_EOL;
 
-                if (in_array($socketMessage->getPayloadType(), [310])) {
+                if (in_array($socketMessage->getPayloadType(), [300])) {
+
+                    $scWebEnterRoomAck = new SCWebEnterRoomAck();
+                    $scWebEnterRoomAck->mergeFromString($socketMessage->getPayload());
+
+                    var_dump($scWebEnterRoomAck->serializeToJsonString());
+
+                    Timer::after(1500, function () use ($client, $spider) {
+                        $socketMessage = new SocketMessage();
+                        $csWebEnterRoom = new CSWebEnterRoom();
+                        $csWebEnterRoom->setLiveStreamId($spider->stream_id);
+                        $csWebEnterRoom->setPageId($spider->page_id);
+                        $csWebEnterRoom->setToken($spider->token);
+                        $spider->reg_decode_data = $csWebEnterRoom->serializeToJsonString();
+                        $socketMessage->setPayload($csWebEnterRoom->serializeToString());
+                        $socketMessage->setPayloadType(200);
+
+                        $client->push($socketMessage->serializeToString(), WEBSOCKET_OPCODE_BINARY);
+                    });
+
+                } elseif (in_array($socketMessage->getPayloadType(), [310])) {
                     $csWebEnterRoom = new SCWebFeedPush();
                     $csWebEnterRoom->mergeFromString($socketMessage->getPayload());
 
@@ -117,7 +141,7 @@ class KSClientLogic
                         $csWebEnterRoom->getSystemNoticeFeeds()->count() +
                         $csWebEnterRoom->getShareFeeds()->count() <= 0
                     ) {
-                        echo '空信息:'  . PHP_EOL;
+                        echo '空信息:' . PHP_EOL;
                         var_dump(new CodedInputStream($stream));
                     }
                 }

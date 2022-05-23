@@ -12,6 +12,7 @@ class KSModel extends AbstractHttpModel
 //    const GET_LIVE_URL = 'https://livev.m.chenzhongtech.com/fw/live/';
     const GET_STREAM_ID_URL = 'https://live.kuaishou.com/u/';
     const GET_WEB_SOCKET_INFO_URL = "https://live.kuaishou.com/live_graphql";
+    const GET_WATCHING_FEED_URL = "https://live.kuaishou.com/rest/wd/live/watchingFeed";
 
     /**
      * @param $id
@@ -81,6 +82,32 @@ class KSModel extends AbstractHttpModel
         ]);
 
         return $this->postCurl(self::GET_WEB_SOCKET_INFO_URL, $data, 20, $headers);
+    }
+
+    public function getWatchingFeed($cookie, $streamId, $liveId)
+    {
+        $headers = [
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36',
+            "Cookie: {$cookie}",
+            "Accept: application/octet-stream",
+            "Accept-Encoding: gzip, deflate, br",
+            "Accept-Language: zh-CN,zh;q=0.9",
+            "Connection: keep-alive",
+            "Content-Length: 30",
+            "Content-Type: application/json;charset=UTF-8",
+            "Host: live.kuaishou.com",
+            "kpf: PC_WEB",
+            "kpn: GAME_ZONE",
+            "Origin: https://live.kuaishou.com",
+            "Referer: https://live.kuaishou.com/u/" . $liveId,
+            "Sec-Fetch-Dest: empty",
+            "Sec-Fetch-Mode: cors",
+            "Sec-Fetch-Site: same-origin",
+        ];
+
+        $data = json_encode(['liveStreamId' => $streamId]);
+
+        return $this->postCurl(self::GET_WATCHING_FEED_URL, $data, 20, $headers);
     }
 
 }
