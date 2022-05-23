@@ -18,10 +18,6 @@ class ClientService
 
     private $spider;
 
-    private $heartBeatPid;
-
-    private $heartBeatFunction;
-
     private $onConnectFunction;
 
     private $liveStreamFunction;
@@ -30,14 +26,6 @@ class ClientService
     {
         $function = $this->onConnectFunction;
         $function($this->client, $this->spider);
-    }
-
-    private function startHeartBeat()
-    {
-        $this->heartBeatPid = Timer::tick(20000, function () {
-            $heartBeat = $this->heartBeatFunction;
-            $heartBeat($this->client, $this->spider);
-        });
     }
 
     private function liveStreamHandle($stream, Client $client, KSSpiderObject $spider)
@@ -55,14 +43,6 @@ class ClientService
     }
 
     /**
-     * @param Closure $heartBeatFunction
-     */
-    public function setHeartBeatFunction(Closure $heartBeatFunction)
-    {
-        $this->heartBeatFunction = $heartBeatFunction;
-    }
-
-    /**
      * @param Closure $liveStreamFunction
      */
     public function setLiveStreamFunction(Closure $liveStreamFunction)
@@ -72,10 +52,6 @@ class ClientService
 
     private function validate()
     {
-        if (!$this->heartBeatFunction) {
-            throw new Exception('heartBeatFunction不能为空');
-        }
-
         if (!$this->onConnectFunction) {
             throw new Exception('onConnectFunction不能为空');
         }
@@ -119,7 +95,6 @@ class ClientService
         }
 
         $this->startOnConnect();
-        $this->startHeartBeat();
 
         while (true) {
             $swooleMsg = $this->client->recv();

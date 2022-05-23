@@ -22,7 +22,6 @@ class KSBarrageCommand extends AbstractCommand
         $ksClientLogic = new KSClientLogic();
         $client = new ClientService();
         $client->setOnConnectFunction($ksClientLogic->getOnConnectHandler());
-        $client->setHeartBeatFunction($ksClientLogic->getHeartBeatHandler());
         $client->setLiveStreamFunction($ksClientLogic->getLiveStreamHandler());
         $client->run(
             (new KSSpiderLogic())->getLiveSpider(
