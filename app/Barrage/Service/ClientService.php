@@ -4,10 +4,8 @@ namespace App\Barrage\Service;
 
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
-use co;
 use Exception;
 use Swoole\Coroutine\Http\Client;
-use Swoole\Timer;
 
 class ClientService
 {
@@ -95,7 +93,7 @@ class ClientService
                     break;
                 }
             }
-            co::sleep(5);
+//            co::sleep(20);
         }
 
         $this->client->close();
