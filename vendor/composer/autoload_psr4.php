@@ -17,7 +17,7 @@ return array(
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'MongoDB\\' => array($vendorDir . '/mongodb/mongodb/src'),
     'Library\\' => array($baseDir . '/library'),
-    'KuaiShouPack\\' => array($baseDir . '/protobuf/KuaiShouPack'),
+    'KuaiShouLive\\' => array($baseDir . '/protobuf/KuaiShouLive'),
     'Illuminate\\Support\\' => array($vendorDir . '/illuminate/support'),
     'Illuminate\\Database\\' => array($vendorDir . '/illuminate/database'),
     'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),

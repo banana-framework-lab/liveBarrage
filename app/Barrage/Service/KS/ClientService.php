@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Barrage\Service;
+namespace App\Barrage\Service\KS;
 
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
+use co;
 use Exception;
 use Swoole\Coroutine\Http\Client;
+use Swoole\Timer;
 
 class ClientService
 {
@@ -75,7 +77,7 @@ class ClientService
 
         $host = (parse_url($this->spider->live_ws_url))['host'] ?? '';
         $this->client = new Client($host, 443, true);
-//        $this->client->set(['websocket_mask' => true]);
+        $this->client->set(['websocket_mask' => true]);
         $this->client->upgrade('/websocket');
 
         if ($this->client->getStatusCode() !== 101) {
@@ -88,12 +90,20 @@ class ClientService
 
         while (true) {
             $swooleMsg = $this->client->recv();
-            if ($swooleMsg) {
+            $errCode = $this->client->errCode;
+            if ($swooleMsg && !$errCode) {
                 if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
                     break;
                 }
+            } elseif ($errCode) {
+                echo "获取信息失败:错误信息:{$this->client->errMsg},错误码:{$errCode}" . PHP_EOL;
+                if ($errCode) {
+                    $this->client->close();
+                    Timer::clearAll();
+                    break;
+                }
             }
-//            co::sleep(20);
+            co::sleep(1);
         }
 
         $this->client->close();

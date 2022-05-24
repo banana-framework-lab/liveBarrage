@@ -30,37 +30,37 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
      */
     private $pushInterval = 0;
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebCommentFeed commentFeeds = 5;</code>
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebCommentFeed commentFeeds = 5;</code>
      */
-    private $commentFeeds = null;
+    private $commentFeeds;
     /**
      * Generated from protobuf field <code>string commentCursor = 6;</code>
      */
     private $commentCursor = '';
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebComboCommentFeed comboCommentFeed = 7;</code>
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebComboCommentFeed comboCommentFeeds = 7;</code>
      */
-    private $comboCommentFeed = null;
+    private $comboCommentFeeds;
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebLikeFeed likeFeeds = 8;</code>
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebLikeFeed likeFeeds = 8;</code>
      */
-    private $likeFeeds = null;
+    private $likeFeeds;
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebGiftFeed giftFeeds = 9;</code>
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebGiftFeed giftFeeds = 9;</code>
      */
-    private $giftFeeds = null;
+    private $giftFeeds;
     /**
      * Generated from protobuf field <code>string giftCursor = 10;</code>
      */
     private $giftCursor = '';
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebSystemNoticeFeed systemNoticeFeeds = 11;</code>
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebSystemNoticeFeed systemNoticeFeeds = 11;</code>
      */
-    private $systemNoticeFeeds = null;
+    private $systemNoticeFeeds;
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebShareFeed shareFeeds = 12;</code>
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebShareFeed shareFeeds = 12;</code>
      */
-    private $shareFeeds = null;
+    private $shareFeeds;
 
     /**
      * Constructor.
@@ -72,14 +72,14 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
      *     @type string $displayLikeCount
      *     @type int|string $pendingLikeCount
      *     @type int|string $pushInterval
-     *     @type \KuaiShouLive\WebCommentFeed $commentFeeds
+     *     @type \KuaiShouLive\WebCommentFeed[]|\Google\Protobuf\Internal\RepeatedField $commentFeeds
      *     @type string $commentCursor
-     *     @type \KuaiShouLive\WebComboCommentFeed $comboCommentFeed
-     *     @type \KuaiShouLive\WebLikeFeed $likeFeeds
-     *     @type \KuaiShouLive\WebGiftFeed $giftFeeds
+     *     @type \KuaiShouLive\WebComboCommentFeed[]|\Google\Protobuf\Internal\RepeatedField $comboCommentFeeds
+     *     @type \KuaiShouLive\WebLikeFeed[]|\Google\Protobuf\Internal\RepeatedField $likeFeeds
+     *     @type \KuaiShouLive\WebGiftFeed[]|\Google\Protobuf\Internal\RepeatedField $giftFeeds
      *     @type string $giftCursor
-     *     @type \KuaiShouLive\WebSystemNoticeFeed $systemNoticeFeeds
-     *     @type \KuaiShouLive\WebShareFeed $shareFeeds
+     *     @type \KuaiShouLive\WebSystemNoticeFeed[]|\Google\Protobuf\Internal\RepeatedField $systemNoticeFeeds
+     *     @type \KuaiShouLive\WebShareFeed[]|\Google\Protobuf\Internal\RepeatedField $shareFeeds
      * }
      */
     public function __construct($data = NULL) {
@@ -176,8 +176,8 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebCommentFeed commentFeeds = 5;</code>
-     * @return \KuaiShouLive\WebCommentFeed
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebCommentFeed commentFeeds = 5;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getCommentFeeds()
     {
@@ -185,14 +185,14 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebCommentFeed commentFeeds = 5;</code>
-     * @param \KuaiShouLive\WebCommentFeed $var
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebCommentFeed commentFeeds = 5;</code>
+     * @param \KuaiShouLive\WebCommentFeed[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setCommentFeeds($var)
     {
-        GPBUtil::checkMessage($var, \KuaiShouLive\WebCommentFeed::class);
-        $this->commentFeeds = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \KuaiShouLive\WebCommentFeed::class);
+        $this->commentFeeds = $arr;
 
         return $this;
     }
@@ -220,30 +220,30 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebComboCommentFeed comboCommentFeed = 7;</code>
-     * @return \KuaiShouLive\WebComboCommentFeed
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebComboCommentFeed comboCommentFeeds = 7;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
-    public function getComboCommentFeed()
+    public function getComboCommentFeeds()
     {
-        return $this->comboCommentFeed;
+        return $this->comboCommentFeeds;
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebComboCommentFeed comboCommentFeed = 7;</code>
-     * @param \KuaiShouLive\WebComboCommentFeed $var
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebComboCommentFeed comboCommentFeeds = 7;</code>
+     * @param \KuaiShouLive\WebComboCommentFeed[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
-    public function setComboCommentFeed($var)
+    public function setComboCommentFeeds($var)
     {
-        GPBUtil::checkMessage($var, \KuaiShouLive\WebComboCommentFeed::class);
-        $this->comboCommentFeed = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \KuaiShouLive\WebComboCommentFeed::class);
+        $this->comboCommentFeeds = $arr;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebLikeFeed likeFeeds = 8;</code>
-     * @return \KuaiShouLive\WebLikeFeed
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebLikeFeed likeFeeds = 8;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getLikeFeeds()
     {
@@ -251,21 +251,21 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebLikeFeed likeFeeds = 8;</code>
-     * @param \KuaiShouLive\WebLikeFeed $var
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebLikeFeed likeFeeds = 8;</code>
+     * @param \KuaiShouLive\WebLikeFeed[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setLikeFeeds($var)
     {
-        GPBUtil::checkMessage($var, \KuaiShouLive\WebLikeFeed::class);
-        $this->likeFeeds = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \KuaiShouLive\WebLikeFeed::class);
+        $this->likeFeeds = $arr;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebGiftFeed giftFeeds = 9;</code>
-     * @return \KuaiShouLive\WebGiftFeed
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebGiftFeed giftFeeds = 9;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getGiftFeeds()
     {
@@ -273,14 +273,14 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebGiftFeed giftFeeds = 9;</code>
-     * @param \KuaiShouLive\WebGiftFeed $var
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebGiftFeed giftFeeds = 9;</code>
+     * @param \KuaiShouLive\WebGiftFeed[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setGiftFeeds($var)
     {
-        GPBUtil::checkMessage($var, \KuaiShouLive\WebGiftFeed::class);
-        $this->giftFeeds = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \KuaiShouLive\WebGiftFeed::class);
+        $this->giftFeeds = $arr;
 
         return $this;
     }
@@ -308,8 +308,8 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebSystemNoticeFeed systemNoticeFeeds = 11;</code>
-     * @return \KuaiShouLive\WebSystemNoticeFeed
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebSystemNoticeFeed systemNoticeFeeds = 11;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getSystemNoticeFeeds()
     {
@@ -317,21 +317,21 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebSystemNoticeFeed systemNoticeFeeds = 11;</code>
-     * @param \KuaiShouLive\WebSystemNoticeFeed $var
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebSystemNoticeFeed systemNoticeFeeds = 11;</code>
+     * @param \KuaiShouLive\WebSystemNoticeFeed[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setSystemNoticeFeeds($var)
     {
-        GPBUtil::checkMessage($var, \KuaiShouLive\WebSystemNoticeFeed::class);
-        $this->systemNoticeFeeds = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \KuaiShouLive\WebSystemNoticeFeed::class);
+        $this->systemNoticeFeeds = $arr;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebShareFeed shareFeeds = 12;</code>
-     * @return \KuaiShouLive\WebShareFeed
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebShareFeed shareFeeds = 12;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getShareFeeds()
     {
@@ -339,14 +339,14 @@ class SCWebFeedPush extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.KuaiShouLive.WebShareFeed shareFeeds = 12;</code>
-     * @param \KuaiShouLive\WebShareFeed $var
+     * Generated from protobuf field <code>repeated .KuaiShouLive.WebShareFeed shareFeeds = 12;</code>
+     * @param \KuaiShouLive\WebShareFeed[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setShareFeeds($var)
     {
-        GPBUtil::checkMessage($var, \KuaiShouLive\WebShareFeed::class);
-        $this->shareFeeds = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \KuaiShouLive\WebShareFeed::class);
+        $this->shareFeeds = $arr;
 
         return $this;
     }

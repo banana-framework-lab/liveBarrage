@@ -6,15 +6,16 @@ use App\Barrage\Constant\KSMap;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
 use Google\Protobuf\Internal\CodedInputStream;
-use KuaiShouPack\SCWebEnterRoomAck;
-use KuaiShouPack\SCWebFeedPush;
-use KuaiShouPack\SocketMessage;
-use KuaiShouPack\WebComboCommentFeed;
-use KuaiShouPack\WebCommentFeed;
-use KuaiShouPack\WebGiftFeed;
-use KuaiShouPack\WebLikeFeed;
-use KuaiShouPack\WebShareFeed;
-use KuaiShouPack\WebSystemNoticeFeed;
+use KuaiShouLive\SCWebEnterRoomAck;
+use KuaiShouLive\SCWebFeedPush;
+use KuaiShouLive\SCWebLiveWatchingUsers;
+use KuaiShouLive\SocketMessage;
+use KuaiShouLive\WebComboCommentFeed;
+use KuaiShouLive\WebCommentFeed;
+use KuaiShouLive\WebGiftFeed;
+use KuaiShouLive\WebLikeFeed;
+use KuaiShouLive\WebShareFeed;
+use KuaiShouLive\WebSystemNoticeFeed;
 use Swoole\Coroutine\Http\Client;
 use Swoole\Timer;
 use Throwable;
@@ -60,9 +61,9 @@ class KSClientLogic
 
                     $scWebEnterRoomAck = new SCWebEnterRoomAck();
                     $scWebEnterRoomAck->mergeFromString($socketMessage->getPayload());
-
+//
 //                    Timer::after($scWebEnterRoomAck->getMinReconnectMs(), function () use ($client, $spider) {
-//                        echo date('Y-m-d H:i:s') . '----------------------------------------发送reconnect' . PHP_EOL;
+//                        echo '----------------------------------------' . date('Y-m-d H:i:s') . '发送reconnect' . PHP_EOL;
 //                        $client->push(
 //                            (new KSMessageLogic())->getEnterRoomMessage($spider)->serializeToString(),
 //                            WEBSOCKET_OPCODE_BINARY
@@ -70,59 +71,53 @@ class KSClientLogic
 //                    });
 
                     Timer::tick($scWebEnterRoomAck->getHeartbeatIntervalMs(), function () use ($client, $spider) {
-                        echo '----------------------------------------' . date('Y-m-d H:i:s') . '发送心跳包' . PHP_EOL;
                         $client->push(
                             (new KSMessageLogic())->getHeartBeatMessage()->serializeToJsonString(),
                             WEBSOCKET_OPCODE_BINARY
                         );
+                        echo '----------------------------------------' . date('Y-m-d H:i:s') . '发送心跳包' . PHP_EOL;
                     });
+                } elseif ($socketMessage->getPayloadType() == 340) {
+                    $scWebEnterRoomAck = new SCWebLiveWatchingUsers();
+                    $scWebEnterRoomAck->mergeFromString($socketMessage->getPayload());
 
+//                    var_dump($scWebEnterRoomAck->serializeToJsonString());
                 } elseif ($socketMessage->getPayloadType() == 310) {
-                    $csWebEnterRoom = new SCWebFeedPush();
-                    $csWebEnterRoom->mergeFromString($socketMessage->getPayload());
+                    $scWebFeedPush = new SCWebFeedPush();
+                    $scWebFeedPush->mergeFromString($socketMessage->getPayload());
 
 
-                    foreach ($csWebEnterRoom->getComboCommentFeed() as $comoCommentFeed) {
+                    foreach ($scWebFeedPush->getComboCommentFeeds() as $comoCommentFeed) {
                         /** @var WebComboCommentFeed $comoCommentFeed */
                         echo '连击评论----' . $comoCommentFeed->getContent() . PHP_EOL;
                     }
 
-                    foreach ($csWebEnterRoom->getCommentFeeds() as $commentFeed) {
+                    foreach ($scWebFeedPush->getCommentFeeds() as $commentFeed) {
                         /** @var WebCommentFeed $commentFeed */
                         echo $commentFeed->getUser()->getUserName() . ':' . $commentFeed->getContent() . PHP_EOL;
                     }
 
-                    foreach ($csWebEnterRoom->getGiftFeeds() as $giftFeed) {
+                    foreach ($scWebFeedPush->getGiftFeeds() as $giftFeed) {
                         /** @var WebGiftFeed $giftFeed */
                         echo $giftFeed->getUser()->getUserName() . ':送出了' . KSMap::getGiftName($giftFeed->getGiftId()) . PHP_EOL;
                     }
 
-                    foreach ($csWebEnterRoom->getLikeFeeds() as $likeFeed) {
+                    foreach ($scWebFeedPush->getLikeFeeds() as $likeFeed) {
                         /** @var WebLikeFeed $likeFeed */
                         echo $likeFeed->getUser()->getUserName() . ':点亮了爱心' . PHP_EOL;
                     }
 
-                    foreach ($csWebEnterRoom->getShareFeeds() as $shareFeed) {
+                    foreach ($scWebFeedPush->getShareFeeds() as $shareFeed) {
                         /** @var WebShareFeed $shareFeed */
                         echo $shareFeed->getUser()->getUserName() . ':分享了直播间' . PHP_EOL;
                     }
 
-                    foreach ($csWebEnterRoom->getSystemNoticeFeeds() as $systemFeed) {
+                    foreach ($scWebFeedPush->getSystemNoticeFeeds() as $systemFeed) {
                         /** @var WebSystemNoticeFeed $systemFeed */
                         echo '系统信息:' . $systemFeed->getUser()->getUserName() . ':' . $systemFeed->getContent() . PHP_EOL;
                     }
 
-                    if (
-                        $csWebEnterRoom->getComboCommentFeed()->count() +
-                        $csWebEnterRoom->getCommentFeeds()->count() +
-                        $csWebEnterRoom->getGiftFeeds()->count() +
-                        $csWebEnterRoom->getLikeFeeds()->count() +
-                        $csWebEnterRoom->getSystemNoticeFeeds()->count() +
-                        $csWebEnterRoom->getShareFeeds()->count() <= 0
-                    ) {
-                        echo '空信息:' . PHP_EOL;
-                        var_dump(new CodedInputStream($stream));
-                    }
+
                 }
 //                elseif ($socketMessage->getPayloadType() == 101) {
 //

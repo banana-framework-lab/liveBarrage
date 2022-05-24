@@ -4,9 +4,9 @@
 namespace App\Barrage\Logic\KS;
 
 use App\Barrage\Object\KS\KSSpiderObject;
-use KuaiShouPack\CSWebEnterRoom;
-use KuaiShouPack\CSWebHeartbeat;
-use KuaiShouPack\SocketMessage;
+use KuaiShouLive\CSWebEnterRoom;
+use KuaiShouLive\CSWebHeartbeat;
+use KuaiShouLive\SocketMessage;
 
 /**
  * Class KSMessageLogic
@@ -19,7 +19,7 @@ class KSMessageLogic
      */
     private function getPageId()
     {
-        $charset = "bjectSymhasOwnProp-0123456789ABCDEFGHIJKLMNQRTUVWXYZ_dfgiklquvxz";
+        $charset = "_zyxwvutsrqponmlkjihgfedcba9876543210ZYXWVUTSRQPONMLKJIHGFEDCBA";
         $page_id = '';
         for ($i = 1; $i <= 16; $i++) {
             $page_id .= substr($charset, (rand(0, strlen($charset) - 1)), 1);
@@ -53,7 +53,7 @@ class KSMessageLogic
     {
         $socketMessage = new SocketMessage();
         $csWebHeartBeat = new CSWebHeartbeat();
-        $csWebHeartBeat->setTimestamp(msectime());
+        $csWebHeartBeat->setTimestamp((int)(time()*1000));
         $socketMessage->setPayload($csWebHeartBeat->serializeToString());
         $socketMessage->setPayloadType(1);
         $socketMessage->serializeToString();

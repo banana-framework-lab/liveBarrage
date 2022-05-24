@@ -40,7 +40,7 @@ class ComposerStaticInitb80b47e2aba01eeb77cbc5da634d0292
         ),
         'K' => 
         array (
-            'KuaiShouPack\\' => 13,
+            'KuaiShouLive\\' => 13,
         ),
         'I' => 
         array (
@@ -115,9 +115,9 @@ class ComposerStaticInitb80b47e2aba01eeb77cbc5da634d0292
         array (
             0 => __DIR__ . '/../..' . '/library',
         ),
-        'KuaiShouPack\\' => 
+        'KuaiShouLive\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/protobuf/KuaiShouPack',
+            0 => __DIR__ . '/../..' . '/protobuf/KuaiShouLive',
         ),
         'Illuminate\\Support\\' => 
         array (

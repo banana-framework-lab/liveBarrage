@@ -4,7 +4,7 @@ namespace App\Barrage\Command;
 
 use App\Barrage\Logic\KS\KSClientLogic;
 use App\Barrage\Logic\KS\KSSpiderLogic;
-use App\Barrage\Service\ClientService;
+use App\Barrage\Service\KS\ClientService;
 use Exception;
 use Library\Abstracts\Command\AbstractCommand;
 use Library\Container;

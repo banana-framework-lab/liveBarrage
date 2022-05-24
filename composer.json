@@ -18,8 +18,8 @@
     "psr-4": {
       "App\\": "app",
       "Library\\": "library",
-      "KuaiShouPack\\": "protobuf/KuaiShouPack",
-      "GPBMetadata\\": "protobuf/GPBMetadata"
+      "GPBMetadata\\": "protobuf/GPBMetadata",
+      "KuaiShouLive\\": "protobuf/KuaiShouLive"
     }
   },
   "repositories": {
