@@ -77,15 +77,7 @@ class ClientService
 
         $host = (parse_url($this->spider->live_ws_url))['host'] ?? '';
         $this->client = new Client($host, 443, true);
-//        $this->client->setHeaders([
-//            'Accept-Encoding: gzip, deflate, br',
-//            'Accept-Language: zh-CN,zh;q=0.9',
-//            'Cache-Control: no-cache',
-//            'Pragma: no-cache',
-//            'Origin: https://live.kuaishou.com',
-//            'User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36'
-//        ]);
-        $this->client->set(['websocket_mask' => true]);
+//        $this->client->set(['websocket_mask' => true]);
         $this->client->upgrade('/websocket');
 
         if ($this->client->getStatusCode() !== 101) {
@@ -106,7 +98,6 @@ class ClientService
             co::sleep(5);
         }
 
-        Timer::clear($this->heartBeatPid);
         $this->client->close();
     }
 }

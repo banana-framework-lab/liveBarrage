@@ -6,9 +6,6 @@ namespace App\Barrage\Logic\KS;
 use App\Barrage\Model\HttpModel\KS\KSModel;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Exception;
-use KuaiShouPack\CSWebEnterRoom;
-use KuaiShouPack\CSWebHeartbeat;
-use KuaiShouPack\SocketMessage;
 use Library\Container;
 
 /**
@@ -45,9 +42,7 @@ class KSSpiderLogic
                 $spider->token = $socketInfo['data']['webSocketInfo']['token'];
                 $spider->live_ws_url = $socketInfo['data']['webSocketInfo']['webSocketUrls'][0] ?? '';
                 $spider->live_id = $live_id;
-                $spider->page_id = $this->getPageId();
 
-                var_dump($spider);
                 return $spider;
             } else {
                 throw new Exception('直播间还未开播');
@@ -55,20 +50,5 @@ class KSSpiderLogic
         } else {
             throw new Exception('直播间信息获取失败');
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getPageId()
-    {
-        $charset = "bjectSymhasOwnProp-0123456789ABCDEFGHIJKLMNQRTUVWXYZ_dfgiklquvxz";
-        $page_id = '';
-        for ($i = 1; $i <= 16; $i++) {
-            $page_id .= substr($charset, (rand(0, strlen($charset) - 1)), 1);
-        }
-        $page_id .= "_";
-        $page_id .= time() * 1000;
-        return $page_id;
     }
 }

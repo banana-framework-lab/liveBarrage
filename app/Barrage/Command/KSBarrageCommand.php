@@ -16,6 +16,8 @@ class KSBarrageCommand extends AbstractCommand
      */
     public function execute()
     {
+        date_default_timezone_set('PRC');
+
         Container::setConfig();
         Container::getConfig()->initConfig();
 

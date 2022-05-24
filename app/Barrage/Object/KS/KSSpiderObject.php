@@ -15,8 +15,4 @@ class KSSpiderObject extends AbstractObject
 
     public $token;
 
-    public $page_id;
-
-    public $reg_decode_data;
-
 }
