@@ -4,10 +4,11 @@ namespace App\Barrage\Command;
 
 use App\Barrage\Logic\KS\KSClientLogic;
 use App\Barrage\Logic\KS\KSSpiderLogic;
-use App\Barrage\Service\KS\ClientService;
+use App\Barrage\Service\KS\KSClientService;
 use Exception;
 use Library\Abstracts\Command\AbstractCommand;
 use Library\Container;
+use Throwable;
 
 class KSBarrageCommand extends AbstractCommand
 {
@@ -22,13 +23,17 @@ class KSBarrageCommand extends AbstractCommand
         Container::getConfig()->initConfig();
 
         $ksClientLogic = new KSClientLogic();
-        $client = new ClientService();
-        $client->setOnConnectFunction($ksClientLogic->getOnConnectHandler());
-        $client->setLiveStreamFunction($ksClientLogic->getLiveStreamHandler());
-        $client->run(
-            (new KSSpiderLogic())->getLiveSpider(
-                Container::getConfig()->get('ks_barrage.live_id')
-            )
-        );
+        $client = new KSClientService();
+        try {
+            $client->setOnConnectFunction($ksClientLogic->getOnConnectHandler());
+            $client->setLiveStreamFunction($ksClientLogic->getLiveStreamHandler());
+            $client->run(
+                (new KSSpiderLogic())->getLiveSpider(
+                    Container::getConfig()->get('ks_barrage.live_id')
+                )
+            );
+        } catch (Throwable $exception) {
+            $client->handleErrCode($exception->getCode(), $exception->getMessage());
+        }
     }
 }

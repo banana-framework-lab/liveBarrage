@@ -9,7 +9,7 @@ use Exception;
 use Swoole\Coroutine\Http\Client;
 use Swoole\Timer;
 
-class ClientService
+class KSClientService
 {
     /**
      * @var Client $client
@@ -72,11 +72,14 @@ class ClientService
      * @param $errCode
      * @param $errMsg
      */
-    private function handleErrCode($errCode, $errMsg)
+    public function handleErrCode($errCode, $errMsg)
     {
         switch ($errCode) {
             case 1017:
                 echo date('Y-m-d H:i:s') . '主播已经下播' . PHP_EOL;
+                break;
+            case 11:
+                echo date('Y-m-d H:i:s') . '服务端断开，重新连接' . PHP_EOL;
                 break;
             default:
                 echo date('Y-m-d H:i:s') . "获取信息失败:错误信息:$errMsg,错误码:$errCode" . PHP_EOL;
@@ -106,6 +109,7 @@ class ClientService
         }
 
         $this->startOnConnect();
+
         while (true) {
             $swooleMsg = $this->client->recv(-1);
             if (!$this->client->errCode) {
@@ -117,11 +121,9 @@ class ClientService
             } else {
                 $this->client->close();
                 Timer::clearAll();
-                break;
+                throw new Exception($this->client->errMsg, $this->client->errCode);
             }
             co::sleep(1);
         }
-
-        $this->handleErrCode($this->client->errCode, $this->client->errMsg);
     }
 }
