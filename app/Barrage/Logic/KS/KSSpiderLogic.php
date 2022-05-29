@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Barrage\Logic\KS;
 
 use App\Barrage\Model\HttpModel\KS\KSModel;
@@ -19,7 +18,7 @@ class KSSpiderLogic
      * @return KSSpiderObject
      * @throws Exception
      */
-    public function getLiveSpider($live_id)
+    public function getLiveSpider($live_id): KSSpiderObject
     {
         $liveInfo = (new KSModel())->getStreamId(
             $live_id,

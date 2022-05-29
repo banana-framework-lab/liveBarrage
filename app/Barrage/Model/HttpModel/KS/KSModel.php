@@ -8,8 +8,6 @@ use Library\Abstracts\Model\AbstractHttpModel;
 
 class KSModel extends AbstractHttpModel
 {
-//    const GET_LIVE_URL = 'https://m.gifshow.com/fw/live/';
-//    const GET_LIVE_URL = 'https://livev.m.chenzhongtech.com/fw/live/';
     const GET_STREAM_ID_URL = 'https://live.kuaishou.com/u/';
     const GET_WEB_SOCKET_INFO_URL = "https://live.kuaishou.com/live_graphql";
     const GET_WATCHING_FEED_URL = "https://live.kuaishou.com/rest/wd/live/watchingFeed";
@@ -19,7 +17,7 @@ class KSModel extends AbstractHttpModel
      * @param $cookie
      * @return string
      */
-    public function getStreamId($id, $cookie)
+    public function getStreamId($id, $cookie): string
     {
         $headers = [
             'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36',
@@ -39,29 +37,20 @@ class KSModel extends AbstractHttpModel
             'Upgrade-Insecure-Requests:1'
         ];
 
-        $data = http_build_query([
-            "cc" => "share_wxms",
-            "followRefer" => "151",
-            "shareMethod" => "CARD",
-            "kpn" => "GAME_ZONE",
-            "subBiz" => "LIVE_STEARM_OUTSIDE",
-            "shareId" => "16944895155523",
-            "shareToken" => "X7ywsTFxbUwvoUk",
-            "shareMode" => "APP",
-            "originShareId" => "16944895155523",
-            "shareObjectId" => "web_pc",
-            "shareUrlOpened" => "0",
-            "timestamp" => "1652951102079",
-        ]);
-
-        return $this->getCurl(self::GET_STREAM_ID_URL . "{$id}", 20, $headers);
+        return $this->getCurl(self::GET_STREAM_ID_URL . $id, 20, $headers);
     }
 
-    public function getWebSocketInfo($liveId, $streamId, $cookie)
+    /**
+     * @param $liveId
+     * @param $streamId
+     * @param $cookie
+     * @return string
+     */
+    public function getWebSocketInfo($liveId, $streamId, $cookie): string
     {
         $headers = [
             'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36',
-            "Cookie: {$cookie}",
+            "Cookie: $cookie",
             "accept: */*",
             "Accept-Language: zh-CN,zh;q=0.9",
             "Connection: keep-alive",
@@ -84,11 +73,17 @@ class KSModel extends AbstractHttpModel
         return $this->postCurl(self::GET_WEB_SOCKET_INFO_URL, $data, 20, $headers);
     }
 
-    public function getWatchingFeed($cookie, $streamId, $liveId)
+    /**
+     * @param $cookie
+     * @param $streamId
+     * @param $liveId
+     * @return string
+     */
+    public function getWatchingFeed($cookie, $streamId, $liveId): string
     {
         $headers = [
             'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36',
-            "Cookie: {$cookie}",
+            "Cookie: $cookie",
             "Accept: application/octet-stream",
             "Accept-Encoding: gzip, deflate, br",
             "Accept-Language: zh-CN,zh;q=0.9",

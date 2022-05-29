@@ -107,7 +107,7 @@ function daemonize()
 }
 
 //返回当前的毫秒时间戳
-function msectime()
+function microTimes()
 {
     [$msec, $sec] = explode(' ', microtime());
     $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);

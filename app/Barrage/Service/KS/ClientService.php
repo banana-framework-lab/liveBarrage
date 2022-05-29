@@ -28,7 +28,7 @@ class ClientService
         $function($this->client, $this->spider);
     }
 
-    private function liveStreamHandle($stream, Client $client, KSSpiderObject $spider)
+    private function liveStreamHandle($stream, Client $client, KSSpiderObject $spider): bool
     {
         $function = $this->liveStreamFunction;
         return $function($stream, $client, $spider) ?: true;
@@ -50,6 +50,9 @@ class ClientService
         $this->liveStreamFunction = $liveStreamFunction;
     }
 
+    /**
+     * @throws Exception
+     */
     private function validate()
     {
         if (!$this->onConnectFunction) {
@@ -62,6 +65,22 @@ class ClientService
 
         if (!$this->spider) {
             throw new Exception('spider不能为空');
+        }
+    }
+
+    /**
+     * @param $errCode
+     * @param $errMsg
+     */
+    private function handleErrCode($errCode, $errMsg)
+    {
+        switch ($errCode) {
+            case 1017:
+                echo date('Y-m-d H:i:s') . '主播已经下播' . PHP_EOL;
+                break;
+            default:
+                echo date('Y-m-d H:i:s') . "获取信息失败:错误信息:$errMsg,错误码:$errCode" . PHP_EOL;
+                break;
         }
     }
 
@@ -87,25 +106,22 @@ class ClientService
         }
 
         $this->startOnConnect();
-
         while (true) {
-            $swooleMsg = $this->client->recv();
-            $errCode = $this->client->errCode;
-            if ($swooleMsg && !$errCode) {
-                if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
-                    break;
+            $swooleMsg = $this->client->recv(-1);
+            if (!$this->client->errCode) {
+                if ($swooleMsg->data) {
+                    if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
+                        break;
+                    }
                 }
-            } elseif ($errCode) {
-                echo "获取信息失败:错误信息:{$this->client->errMsg},错误码:{$errCode}" . PHP_EOL;
-                if ($errCode) {
-                    $this->client->close();
-                    Timer::clearAll();
-                    break;
-                }
+            } else {
+                $this->client->close();
+                Timer::clearAll();
+                break;
             }
             co::sleep(1);
         }
 
-        $this->client->close();
+        $this->handleErrCode($this->client->errCode, $this->client->errMsg);
     }
 }

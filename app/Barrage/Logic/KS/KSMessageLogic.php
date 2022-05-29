@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Barrage\Logic\KS;
 
 use App\Barrage\Object\KS\KSSpiderObject;
@@ -17,7 +16,7 @@ class KSMessageLogic
     /**
      * @return string
      */
-    private function getPageId()
+    private function getPageId(): string
     {
         $charset = "_zyxwvutsrqponmlkjihgfedcba9876543210ZYXWVUTSRQPONMLKJIHGFEDCBA";
         $page_id = '';
@@ -33,7 +32,7 @@ class KSMessageLogic
      * @param KSSpiderObject $spider
      * @return SocketMessage
      */
-    public function getEnterRoomMessage(KSSpiderObject $spider)
+    public function getEnterRoomMessage(KSSpiderObject $spider): SocketMessage
     {
         $socketMessage = new SocketMessage();
         $csWebEnterRoom = new CSWebEnterRoom();
@@ -49,11 +48,11 @@ class KSMessageLogic
     /**
      * @return SocketMessage
      */
-    public function getHeartBeatMessage()
+    public function getHeartBeatMessage(): SocketMessage
     {
         $socketMessage = new SocketMessage();
         $csWebHeartBeat = new CSWebHeartbeat();
-        $csWebHeartBeat->setTimestamp((int)(time()*1000));
+        $csWebHeartBeat->setTimestamp(microTimes());
         $socketMessage->setPayload($csWebHeartBeat->serializeToString());
         $socketMessage->setPayloadType(1);
         $socketMessage->serializeToString();
