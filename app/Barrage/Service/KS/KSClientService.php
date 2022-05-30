@@ -76,7 +76,8 @@ class KSClientService
     {
         switch ($errCode) {
             case 1017:
-                echo date('Y-m-d H:i:s') . '主播已经下播' . PHP_EOL;
+            case 1016:
+                echo date('Y-m-d H:i:s') . '主播已经下播' . $errCode . PHP_EOL;
                 break;
             case 11:
                 echo date('Y-m-d H:i:s') . '服务端断开，重新连接' . PHP_EOL;
