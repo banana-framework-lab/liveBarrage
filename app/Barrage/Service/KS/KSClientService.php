@@ -2,12 +2,15 @@
 
 namespace App\Barrage\Service\KS;
 
+use App\Barrage\Constant\KSStateCode;
+use App\Barrage\Object\KS\KSErrorObject;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;
 use co;
 use Exception;
 use Swoole\Coroutine\Http\Client;
 use Swoole\Timer;
+use Throwable;
 
 class KSClientService
 {
@@ -71,60 +74,67 @@ class KSClientService
     /**
      * @param $errCode
      * @param $errMsg
+     * @return int
      */
-    public function handleErrCode($errCode, $errMsg)
+    public function handleErrCode($errCode, $errMsg): int
     {
         switch ($errCode) {
             case 1017:
             case 1016:
                 echo date('Y-m-d H:i:s') . '主播已经下播' . $errCode . PHP_EOL;
-                break;
+                return KSStateCode::CLIENT_END;
             case 11:
                 echo date('Y-m-d H:i:s') . '服务端断开，重新连接' . PHP_EOL;
-                break;
+                return KSStateCode::CLIENT_NEED_RESTART;
             default:
-                echo date('Y-m-d H:i:s') . "获取信息失败:错误信息:$errMsg,错误码:$errCode" . PHP_EOL;
-                break;
+                echo date('Y-m-d H:i:s') . "错误信息:$errMsg,错误码:$errCode" . PHP_EOL;
+                return KSStateCode::CLIENT_END;
         }
     }
 
     /**
      * @param KSSpiderObject $spider
-     * @throws Exception
+     * @return KSErrorObject
      */
-    public function run(KSSpiderObject $spider)
+    public function run(KSSpiderObject $spider): KSErrorObject
     {
-        $this->spider = $spider;
+        try {
+            $this->spider = $spider;
+            $this->validate();
 
-        $this->validate();
+            $this->client = new Client($this->spider->getWSHost(), 443, true);
+            $this->client->set(['websocket_mask' => true]);
+            $this->client->upgrade('/websocket');
 
-        $host = (parse_url($this->spider->live_ws_url))['host'] ?? '';
-        $this->client = new Client($host, 443, true);
-        $this->client->set(['websocket_mask' => true]);
-        $this->client->upgrade('/websocket');
-
-        if ($this->client->getStatusCode() !== 101) {
-            echo "websocket握手失败,返回码为" . $this->client->getStatusCode() . PHP_EOL;
-            $this->client->close();
-            return;
-        }
-
-        $this->startOnConnect();
-
-        while (true) {
-            $swooleMsg = $this->client->recv(-1);
-            if (!$this->client->errCode) {
-                if ($swooleMsg->data) {
-                    if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
-                        break;
-                    }
-                }
-            } else {
+            if ($this->client->getStatusCode() !== 101) {
                 $this->client->close();
-                Timer::clearAll();
-                throw new Exception($this->client->errMsg, $this->client->errCode);
+                throw new Exception("websocket握手失败,返回码为" . $this->client->getStatusCode(), KSStateCode::HANDSHAKE_FAIL);
             }
-            co::sleep(1);
+
+            $this->startOnConnect();
+
+            while (true) {
+                $swooleMsg = $this->client->recv(-1);
+                if (!$this->client->errCode) {
+                    if ($swooleMsg->data) {
+                        if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
+                            return new KSErrorObject([
+                                'code' => KSStateCode::SUCCESS,
+                            ]);
+                        }
+                    }
+                } else {
+                    $this->client->close();
+                    Timer::clearAll();
+                    throw new Exception($this->client->errMsg, $this->client->errCode);
+                }
+                co::sleep(1);
+            }
+        } catch (Throwable $e) {
+            $error = new KSErrorObject();
+            $error->code = $e->getMessage();
+            $error->message = $e->getMessage();
         }
+        return $error;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Barrage\Command;
 
+use App\Barrage\Constant\KSStateCode;
 use App\Barrage\Logic\KS\KSClientLogic;
 use App\Barrage\Logic\KS\KSSpiderLogic;
 use App\Barrage\Service\KS\KSClientService;
@@ -19,21 +20,28 @@ class KSBarrageCommand extends AbstractCommand
     {
         date_default_timezone_set('PRC');
 
-        Container::setConfig();
-        Container::getConfig()->initConfig();
-
-        $ksClientLogic = new KSClientLogic();
-        $client = new KSClientService();
         try {
+            Container::setConfig();
+            Container::getConfig()->initConfig();
+
+            $ksClientLogic = new KSClientLogic();
+            $client = new KSClientService();
+            $spider = (new KSSpiderLogic())->getLiveSpider(
+                Container::getConfig()->get('ks_barrage.live_id')
+            );
             $client->setOnConnectFunction($ksClientLogic->getOnConnectHandler());
             $client->setLiveStreamFunction($ksClientLogic->getLiveStreamHandler());
-            $client->run(
-                (new KSSpiderLogic())->getLiveSpider(
-                    Container::getConfig()->get('ks_barrage.live_id')
-                )
-            );
-        } catch (Throwable $exception) {
-            $client->handleErrCode($exception->getCode(), $exception->getMessage());
+        } catch (Throwable $e) {
+            echo $e->getMessage() . PHP_EOL;
+            return;
+        }
+
+        while (true) {
+            $state = $client->run((new KSSpiderLogic())->getLiveSpider($spider));
+
+            if ($client->handleErrCode($state->code, $state->message) != KSStateCode::CLIENT_NEED_RESTART) {
+                break;
+            }
         }
     }
 }

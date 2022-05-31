@@ -3,6 +3,7 @@
 
 namespace App\Barrage\Object\KS;
 
+use Exception;
 use Library\Abstracts\Object\AbstractObject;
 
 class KSSpiderObject extends AbstractObject
@@ -14,5 +15,18 @@ class KSSpiderObject extends AbstractObject
     public $stream_id;
 
     public $token;
+
+    /**
+     * @throws Exception
+     */
+    public function getWSHost()
+    {
+        $host = (parse_url($this->spider->live_ws_url))['host'] ?? '';
+        if($host){
+            return $host;
+        }else{
+            throw new Exception('host为空');
+        }
+    }
 
 }
