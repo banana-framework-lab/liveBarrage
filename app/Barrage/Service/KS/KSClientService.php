@@ -114,10 +114,14 @@ class KSClientService
         while (true) {
             $swooleMsg = $this->client->recv(-1);
             if (!$this->client->errCode) {
-                if ($swooleMsg->data) {
-                    if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
-                        break;
+                if ($swooleMsg) {
+                    if ($swooleMsg->data) {
+                        if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
+                            break;
+                        }
                     }
+                } else {
+                    throw new Exception('返回空消息体', $this->client->errCode);
                 }
             } else {
                 $this->client->close();

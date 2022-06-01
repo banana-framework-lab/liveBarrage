@@ -107,6 +107,8 @@ class KSClientLogic
                     $scWebLiveWatchingUsers = new SCWebLiveWatchingUsers();
                     $scWebLiveWatchingUsers->mergeFromString($socketMessage->getPayload());
 
+                    $this->echoSystemMsg($scWebLiveWatchingUsers->serializeToJsonString());
+
                 } elseif ($socketMessage->getPayloadType() == 310) {
 
                     $scWebFeedPush = new SCWebFeedPush();
@@ -114,32 +116,32 @@ class KSClientLogic
 
                     foreach ($scWebFeedPush->getComboCommentFeeds() as $comoCommentFeed) {
                         /** @var WebComboCommentFeed $comoCommentFeed */
-                        echo date('Y-m-d H:i:s').'连击评论----' . $comoCommentFeed->getContent() . PHP_EOL;
+                        echo date('Y-m-d H:i:s') . '连击评论----' . $comoCommentFeed->getContent() . PHP_EOL;
                     }
 
                     foreach ($scWebFeedPush->getCommentFeeds() as $commentFeed) {
                         /** @var WebCommentFeed $commentFeed */
-                        echo date('Y-m-d H:i:s').$commentFeed->getUser()->getUserName() . ':' . $commentFeed->getContent() . PHP_EOL;
+                        echo date('Y-m-d H:i:s') . $commentFeed->getUser()->getUserName() . ':' . $commentFeed->getContent() . PHP_EOL;
                     }
 
                     foreach ($scWebFeedPush->getGiftFeeds() as $giftFeed) {
                         /** @var WebGiftFeed $giftFeed */
-                        echo date('Y-m-d H:i:s').$giftFeed->getUser()->getUserName() . ':送出了' . KSMap::getGiftName($giftFeed->getGiftId()) . PHP_EOL;
+                        echo date('Y-m-d H:i:s') . $giftFeed->getUser()->getUserName() . ':送出了' . KSMap::getGiftName($giftFeed->getGiftId()) . PHP_EOL;
                     }
 
                     foreach ($scWebFeedPush->getLikeFeeds() as $likeFeed) {
                         /** @var WebLikeFeed $likeFeed */
-                        echo date('Y-m-d H:i:s').$likeFeed->getUser()->getUserName() . ':点亮了爱心' . PHP_EOL;
+                        echo date('Y-m-d H:i:s') . $likeFeed->getUser()->getUserName() . ':点亮了爱心' . PHP_EOL;
                     }
 
                     foreach ($scWebFeedPush->getShareFeeds() as $shareFeed) {
                         /** @var WebShareFeed $shareFeed */
-                        echo date('Y-m-d H:i:s').$shareFeed->getUser()->getUserName() . ':分享了直播间' . PHP_EOL;
+                        echo date('Y-m-d H:i:s') . $shareFeed->getUser()->getUserName() . ':分享了直播间' . PHP_EOL;
                     }
 
                     foreach ($scWebFeedPush->getSystemNoticeFeeds() as $systemFeed) {
                         /** @var WebSystemNoticeFeed $systemFeed */
-                        echo date('Y-m-d H:i:s').'系统信息:' . $systemFeed->getUser()->getUserName() . ':' . $systemFeed->getContent() . PHP_EOL;
+                        echo date('Y-m-d H:i:s') . '系统信息:' . $systemFeed->getUser()->getUserName() . ':' . $systemFeed->getContent() . PHP_EOL;
                     }
 
 
