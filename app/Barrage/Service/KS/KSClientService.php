@@ -2,7 +2,7 @@
 
 namespace App\Barrage\Service\KS;
 
-use App\Barrage\Constant\KSStateCode;
+use App\Barrage\Constant\KS\KSStateCode;
 use App\Barrage\Object\KS\KSErrorObject;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;

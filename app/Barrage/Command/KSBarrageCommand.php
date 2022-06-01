@@ -2,7 +2,7 @@
 
 namespace App\Barrage\Command;
 
-use App\Barrage\Constant\KSStateCode;
+use App\Barrage\Constant\KS\KSStateCode;
 use App\Barrage\Logic\KS\KSClientLogic;
 use App\Barrage\Logic\KS\KSSpiderLogic;
 use App\Barrage\Service\KS\KSClientService;

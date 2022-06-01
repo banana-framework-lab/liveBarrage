@@ -2,7 +2,7 @@
 
 namespace App\Barrage\Logic\KS;
 
-use App\Barrage\Constant\KSMap;
+use App\Barrage\Constant\KS\KSMap;
 use App\Barrage\Model\HttpModel\KS\KSModel;
 use App\Barrage\Object\KS\KSSpiderObject;
 use Closure;

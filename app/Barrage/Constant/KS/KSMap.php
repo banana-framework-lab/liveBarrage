@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Barrage\Constant;
+namespace App\Barrage\Constant\KS;
 
 
 class KSMap
