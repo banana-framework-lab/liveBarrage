@@ -21,11 +21,11 @@ class KSSpiderObject extends AbstractObject
      */
     public function getWSHost()
     {
-        $host = (parse_url($this->spider->live_ws_url))['host'] ?? '';
-        if($host){
+        $host = (parse_url($this->live_ws_url))['host'] ?? '';
+        if ($host) {
             return $host;
-        }else{
-            throw new Exception('host为空');
+        } else {
+            throw new Exception('host为空', 0);
         }
     }
 

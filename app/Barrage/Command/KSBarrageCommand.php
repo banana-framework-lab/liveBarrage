@@ -37,7 +37,7 @@ class KSBarrageCommand extends AbstractCommand
         }
 
         while (true) {
-            $state = $client->run((new KSSpiderLogic())->getLiveSpider($spider));
+            $state = $client->run($spider);
 
             if ($client->handleErrCode($state->code, $state->message) != KSStateCode::CLIENT_NEED_RESTART) {
                 break;
