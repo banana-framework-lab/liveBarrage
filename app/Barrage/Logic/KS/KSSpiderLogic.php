@@ -44,10 +44,10 @@ class KSSpiderLogic
 
                 return $spider;
             } else {
-                throw new Exception('直播间还未开播');
+                throw new Exception("直播间({$live_id})还未开播");
             }
         } else {
-            throw new Exception('直播间信息获取失败');
+            throw new Exception("直播间({$live_id})信息获取失败");
         }
     }
 }
