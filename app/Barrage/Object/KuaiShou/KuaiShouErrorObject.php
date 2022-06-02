@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Barrage\Object\KS;
+namespace App\Barrage\Object\KuaiShou;
 
 use Library\Abstracts\Object\AbstractObject;
 
-class KSErrorObject extends AbstractObject
+class KuaiShouErrorObject extends AbstractObject
 {
     public $code;
 

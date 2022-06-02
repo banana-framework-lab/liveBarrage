@@ -14,7 +14,7 @@ use Library\Container\Channel;
  * Class Channel
  * @package Library
  */
-class ChannelMap
+class ChannelRouterMap
 {
     /**
      * @var array $channelPool
@@ -24,13 +24,13 @@ class ChannelMap
     /**
      * 初始化Router类
      */
-    public static function instanceStart()
+    public function __construct()
     {
-        $handler = opendir(dirname(__FILE__) . '/../channel');
+        $handler = opendir(dirname(__FILE__) . '/../../../channel');
         while (($fileName = readdir($handler)) !== false) {
             if ($fileName != "." && $fileName != "..") {
-                if (file_exists(dirname(__FILE__) . '/../channel/' . $fileName)) {
-                    $fileData = require dirname(__FILE__) . '/../channel/' . $fileName;
+                if (file_exists(dirname(__FILE__) . '/../../../channel/' . $fileName)) {
+                    $fileData = require dirname(__FILE__) . '/../../../channel/' . $fileName;
                     self::$channelPool = array_merge(self::$channelPool, $fileData);
                 }
             }
@@ -43,7 +43,7 @@ class ChannelMap
      * @param array $requestData
      * @return Channel
      */
-    public static function route(array $requestData): Channel
+    public function channelRoute(array $requestData): Channel
     {
         $requestChannel = $requestData['channel'] ?? 'Index';
         $channel = self::$channelPool[$requestChannel] ?? null;
@@ -65,7 +65,7 @@ class ChannelMap
      * 返回通道列表
      * @return array
      */
-    public static function getChannelList(): array
+    public function getChannelList(): array
     {
         return array_keys(self::$channelPool);
     }

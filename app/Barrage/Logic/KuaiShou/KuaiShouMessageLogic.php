@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Barrage\Logic\KS;
+namespace App\Barrage\Logic\KuaiShou;
 
-use App\Barrage\Object\KS\KSSpiderObject;
+use App\Barrage\Object\KuaiShou\KuaiShouSpiderObject;
 use KuaiShouLive\CSWebEnterRoom;
 use KuaiShouLive\CSWebHeartbeat;
 use KuaiShouLive\SocketMessage;
 
 /**
- * Class KSMessageLogic
+ * Class KuaiShouMessageLogic
  * @package App\Barrage\Logic\KS
  */
-class KSMessageLogic
+class KuaiShouMessageLogic
 {
     /**
      * @return string
@@ -29,10 +29,10 @@ class KSMessageLogic
     }
 
     /**
-     * @param KSSpiderObject $spider
+     * @param KuaiShouSpiderObject $spider
      * @return SocketMessage
      */
-    public function getEnterRoomMessage(KSSpiderObject $spider): SocketMessage
+    public function getEnterRoomMessage(KuaiShouSpiderObject $spider): SocketMessage
     {
         $socketMessage = new SocketMessage();
         $csWebEnterRoom = new CSWebEnterRoom();

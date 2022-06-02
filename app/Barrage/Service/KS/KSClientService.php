@@ -2,9 +2,9 @@
 
 namespace App\Barrage\Service\KS;
 
-use App\Barrage\Constant\KS\KSStateCode;
-use App\Barrage\Object\KS\KSErrorObject;
-use App\Barrage\Object\KS\KSSpiderObject;
+use App\Barrage\Constant\KuaiShou\KuaiShouStateCode;
+use App\Barrage\Object\KuaiShou\KuaiShouErrorObject;
+use App\Barrage\Object\KuaiShou\KuaiShouSpiderObject;
 use Closure;
 use co;
 use Exception;
@@ -31,7 +31,7 @@ class KSClientService
         $function($this->client, $this->spider);
     }
 
-    private function liveStreamHandle($stream, Client $client, KSSpiderObject $spider): bool
+    private function liveStreamHandle($stream, Client $client, KuaiShouSpiderObject $spider): bool
     {
         $function = $this->liveStreamFunction;
         return $function($stream, $client, $spider) ?: true;
@@ -82,21 +82,21 @@ class KSClientService
             case 1017:
             case 1016:
                 echo date('Y-m-d H:i:s') . '主播已经下播' . $errCode . PHP_EOL;
-                return KSStateCode::CLIENT_END;
+                return KuaiShouStateCode::CLIENT_END;
             case 11:
                 echo date('Y-m-d H:i:s') . '服务端断开，重新连接' . PHP_EOL;
-                return KSStateCode::CLIENT_NEED_RESTART;
+                return KuaiShouStateCode::CLIENT_NEED_RESTART;
             default:
                 echo date('Y-m-d H:i:s') . "错误信息:$errMsg,错误码:$errCode" . PHP_EOL;
-                return KSStateCode::CLIENT_END;
+                return KuaiShouStateCode::CLIENT_END;
         }
     }
 
     /**
-     * @param KSSpiderObject $spider
-     * @return KSErrorObject
+     * @param KuaiShouSpiderObject $spider
+     * @return KuaiShouErrorObject
      */
-    public function run(KSSpiderObject $spider): KSErrorObject
+    public function run(KuaiShouSpiderObject $spider): KuaiShouErrorObject
     {
         try {
             $this->spider = $spider;
@@ -108,7 +108,7 @@ class KSClientService
 
             if ($this->client->getStatusCode() !== 101) {
                 $this->client->close();
-                throw new Exception("websocket握手失败,返回码为" . $this->client->getStatusCode(), KSStateCode::HANDSHAKE_FAIL);
+                throw new Exception("websocket握手失败,返回码为" . $this->client->getStatusCode(), KuaiShouStateCode::HANDSHAKE_FAIL);
             }
 
             $this->startOnConnect();
@@ -119,8 +119,8 @@ class KSClientService
                     if ($swooleMsg) {
                         if ($swooleMsg->data) {
                             if (!$this->liveStreamHandle($swooleMsg->data, $this->client, $spider)) {
-                                return new KSErrorObject([
-                                    'code' => KSStateCode::SUCCESS,
+                                return new KuaiShouErrorObject([
+                                    'code' => KuaiShouStateCode::SUCCESS,
                                 ]);
                             }
                         }
@@ -135,7 +135,7 @@ class KSClientService
                 co::sleep(1);
             }
         } catch (Throwable $e) {
-            $error = new KSErrorObject();
+            $error = new KuaiShouErrorObject();
             $error->code = $e->getMessage();
             $error->message = $e->getMessage();
         }

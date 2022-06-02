@@ -1,10 +1,12 @@
 <?php
 
 
-namespace App\Barrage\Constant\KS;
+namespace App\Barrage\Constant\KuaiShou;
 
 
-class KSMap
+use KuaiShouLive\WebCommentFeed;
+
+class KuaiShouMap
 {
     const PAYLOAD_TYPE_MAP = [
         0 => 'UNKNOWN',
@@ -464,6 +466,10 @@ class KSMap
         10745 => "充电灯球",
         10746 => "充电话筒",
     ];
+
+    const MESSAGE_COMMENT_TYPE = 'comment';
+    const MESSAGE_GIFT_TYPE = 'gift';
+    const MESSAGE_LIKE_TYPE = 'like';
 
     static public function getPayLoadTypeName($type)
     {

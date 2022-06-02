@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Barrage\Object\KS;
+namespace App\Barrage\Object\KuaiShou;
 
 use Exception;
 use Library\Abstracts\Object\AbstractObject;
 
-class KSSpiderObject extends AbstractObject
+class KuaiShouSpiderObject extends AbstractObject
 {
     public $live_id;
 

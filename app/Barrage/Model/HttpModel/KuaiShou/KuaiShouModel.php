@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Barrage\Model\HttpModel\KS;
+namespace App\Barrage\Model\HttpModel\KuaiShou;
 
 
 use Library\Abstracts\Model\AbstractHttpModel;
 
-class KSModel extends AbstractHttpModel
+class KuaiShouModel extends AbstractHttpModel
 {
     const GET_STREAM_ID_URL = 'https://live.kuaishou.com/u/';
     const GET_WEB_SOCKET_INFO_URL = "https://live.kuaishou.com/live_graphql";
@@ -103,6 +103,45 @@ class KSModel extends AbstractHttpModel
         $data = json_encode(['liveStreamId' => $streamId]);
 
         return $this->postCurl(self::GET_WATCHING_FEED_URL, $data, 20, $headers);
+    }
+
+    /**
+     * @param $cookie
+     * @param $liveId
+     * @param $principalId
+     * @return string
+     */
+    public function getUserInfo($cookie, $liveId, $principalId)
+    {
+        $headers = [
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36',
+            "Cookie: $cookie",
+            "Accept: */*",
+            "Accept-Encoding: gzip, deflate, br",
+            "Accept-Language: zh-CN,zh;q=0.9",
+            "Connection: keep-alive",
+//            "Content-Length: 700",
+            "Content-Type: application/json;charset=UTF-8",
+            "Host: live.kuaishou.com",
+            "kpf: PC_WEB",
+            "kpn: GAME_ZONE",
+            "Origin: https://live.kuaishou.com",
+            "Referer: https://live.kuaishou.com/u/" . $liveId,
+            "Sec-Fetch-Dest: empty",
+            "Sec-Fetch-Mode: cors",
+            "Sec-Fetch-Site: same-origin",
+        ];
+
+        $data = json_encode([
+            "operationName" => 'UserCardInfoById',
+            "variables" => [
+                "principalId" => $principalId,
+                "count" => 3,
+            ],
+            "query" => "query UserCardInfoById(\$principalId: String, \$count: Int) {\n  userCardInfo(principalId: \$principalId, count: \$count) {\n    id\n    originUserId\n    avatar\n    name\n    description\n    sex\n    constellation\n    cityName\n    followStatus\n    privacy\n    feeds {\n      eid\n      photoId\n      thumbnailUrl\n      timestamp\n      __typename\n    }\n    counts {\n      fan\n      follow\n      photo\n      __typename\n    }\n    __typename\n  }\n}\n"
+        ]);
+
+        return $this->postCurl(self::GET_WEB_SOCKET_INFO_URL, $data, 20, $headers);
     }
 
 }

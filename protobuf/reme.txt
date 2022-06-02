@@ -1,0 +1,1 @@
+protoc KuaiShouLive.proto --php_out  /var/www/html/YiShiDaiPro/liveBarrage/protobuf/

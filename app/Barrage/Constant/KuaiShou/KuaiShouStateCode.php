@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Barrage\Constant\KS;
+namespace App\Barrage\Constant\KuaiShou;
 
-class KSStateCode
+class KuaiShouStateCode
 {
     // 网络链接状态码
     const SUCCESS = 0;

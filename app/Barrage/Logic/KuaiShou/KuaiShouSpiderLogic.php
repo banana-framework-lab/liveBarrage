@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Barrage\Logic\KS;
+namespace App\Barrage\Logic\KuaiShou;
 
-use App\Barrage\Model\HttpModel\KS\KSModel;
-use App\Barrage\Object\KS\KSSpiderObject;
+use App\Barrage\Model\HttpModel\KuaiShou\KuaiShouModel;
+use App\Barrage\Object\KuaiShou\KuaiShouSpiderObject;
 use Exception;
 use Library\Container;
 
 /**
- * Class KSSpiderLogic
+ * Class KuaiShouSpiderLogic
  * @package App\Barrage\Logic\KS
  */
-class KSSpiderLogic
+class KuaiShouSpiderLogic
 {
     /**
      * @param $live_id
-     * @return KSSpiderObject
+     * @return KuaiShouSpiderObject
      * @throws Exception
      */
-    public function getLiveSpider($live_id): KSSpiderObject
+    public function getLiveSpider($live_id): KuaiShouSpiderObject
     {
-        $liveInfo = (new KSModel())->getStreamId(
+        $liveInfo = (new KuaiShouModel())->getStreamId(
             $live_id,
             Container::getConfig()->get('ks_barrage.cookie')
         );
@@ -30,14 +30,14 @@ class KSSpiderLogic
             if ($streamInfo['json'] ?? false) {
                 $data['stream_id'] = $streamInfo['json']['liveStreamId'] ?? '';
 
-                $socketInfo = (new KSModel())->getWebSocketInfo(
+                $socketInfo = (new KuaiShouModel())->getWebSocketInfo(
                     $live_id,
                     $data['stream_id'],
                     Container::getConfig()->get('ks_barrage.cookie')
                 );
 
                 $socketInfo = json_decode($socketInfo, true);
-                $spider = new KSSpiderObject($data);
+                $spider = new KuaiShouSpiderObject($data);
                 $spider->token = $socketInfo['data']['webSocketInfo']['token'];
                 $spider->live_ws_url = $socketInfo['data']['webSocketInfo']['webSocketUrls'][0] ?? '';
                 $spider->live_id = $live_id;
