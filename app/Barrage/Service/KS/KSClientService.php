@@ -79,6 +79,7 @@ class KSClientService
     public function handleErrCode($errCode, $errMsg): int
     {
         switch ($errCode) {
+            case KuaiShouStateCode::LIVE_DOWN:
             case 1017:
             case 1016:
                 echo date('Y-m-d H:i:s') . '主播已经下播' . $errCode . PHP_EOL;
@@ -125,7 +126,7 @@ class KSClientService
                             }
                         }
                     } else {
-                        throw new Exception('返回空消息体', $this->client->errCode);
+                        throw new Exception('返回空消息体', KuaiShouStateCode::LIVE_DOWN);
                     }
                 } else {
                     $this->client->close();
@@ -136,7 +137,7 @@ class KSClientService
             }
         } catch (Throwable $e) {
             $error = new KuaiShouErrorObject();
-            $error->code = $e->getMessage();
+            $error->code = $e->getCode();
             $error->message = $e->getMessage();
         }
         return $error;
