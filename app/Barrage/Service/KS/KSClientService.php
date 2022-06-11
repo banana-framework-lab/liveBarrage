@@ -85,6 +85,7 @@ class KSClientService
                 echo date('Y-m-d H:i:s') . '主播已经下播' . $errCode . PHP_EOL;
                 return KuaiShouStateCode::CLIENT_END;
             case 11:
+            case KuaiShouStateCode::HANDSHAKE_FAIL:
                 echo date('Y-m-d H:i:s') . '服务端断开，重新连接' . PHP_EOL;
                 return KuaiShouStateCode::CLIENT_NEED_RESTART;
             default:

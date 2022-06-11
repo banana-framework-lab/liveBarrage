@@ -8,7 +8,7 @@ class KuaiShouBarrageLogic
 {
     public function getBarrage(int $time)
     {
-        $data = (new KuaiShouBarrageModel())->getBarrage($time);
+        $data = (new KuaiShouBarrageModel())->getBarrage(0);
         foreach ($data as &$info) {
             $info = json_decode($info, true);
         }

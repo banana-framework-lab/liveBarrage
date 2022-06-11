@@ -21,21 +21,11 @@ class KuaiShouBarrageCommand extends AbstractCommand
         date_default_timezone_set('PRC');
 
         try {
+            // 初始化配置
             Container::setConfig();
             Container::getConfig()->initConfig();
-            // Pool默认启动
-            $defaultInitList = ['redis'];
-            foreach ($defaultInitList as $initPool) {
-                $default_name = Container::getConfig()->get("pool.{$initPool}.index", 'default');
-                if (Container::getConfig()->get("$initPool.$default_name")) {
-                    $poolName = ucfirst(strtolower($initPool));
-                    if (method_exists(Container::class, "set{$poolName}Pool")) {
-                        $methodName = "set{$poolName}Pool";
-                        Container::$methodName($default_name);
-                    }
-                }
-            }
-
+            // 初始化redis
+            Container::setRedisPool('barrage');
 
             $ksClientLogic = new KuaiShouClientLogic();
             $client = new KSClientService();

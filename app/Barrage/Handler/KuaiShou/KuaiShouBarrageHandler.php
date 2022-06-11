@@ -1,8 +1,5 @@
 <?php
-
-
-namespace App\Barrage\Handler;
-
+namespace App\Barrage\Handler\KuaiShou;
 
 use Library\Abstracts\Handler\AbstractHandler;
 use Swoole\Http\Request as SwooleHttpRequest;
