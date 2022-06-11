@@ -9,6 +9,7 @@ use App\Barrage\Service\KS\KSClientService;
 use Exception;
 use Library\Abstracts\Command\AbstractCommand;
 use Library\Container;
+use Swoole\Timer;
 use Throwable;
 
 class KuaiShouBarrageCommand extends AbstractCommand
@@ -43,6 +44,7 @@ class KuaiShouBarrageCommand extends AbstractCommand
             $state = $client->run($spider);
 
             if ($client->handleErrCode($state->code, $state->message) != KuaiShouStateCode::CLIENT_NEED_RESTART) {
+                Timer::clearAll();
                 break;
             }
         }
