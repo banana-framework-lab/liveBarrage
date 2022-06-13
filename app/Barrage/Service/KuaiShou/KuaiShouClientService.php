@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Barrage\Service\KS;
+namespace App\Barrage\Service\KuaiShou;
 
 use App\Barrage\Constant\KuaiShou\KuaiShouStateCode;
 use App\Barrage\Object\KuaiShou\KuaiShouErrorObject;
@@ -12,7 +12,7 @@ use Swoole\Coroutine\Http\Client;
 use Swoole\Timer;
 use Throwable;
 
-class KSClientService
+class KuaiShouClientService
 {
     /**
      * @var Client $client
